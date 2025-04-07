@@ -1,0 +1,98 @@
+NSE CSV to CSVBox API
+A Node.js/Express API that accepts NSE (National Stock Exchange) scraped CSV data and uploads it to CSVBox.io.
+Features
+
+Accept scraped NSE data in CSV format via POST request
+Upload CSV data to CSVBox.io
+Return public URL to the updated CSV file
+Retrieve current data from CSVBox as JSON
+
+Prerequisites
+
+Node.js (v14 or later recommended)
+CSVBox.io account with API key and template set up
+
+Installation
+
+Clone the repository:
+Copygit clone <your-repo-url>
+cd <repo-directory>
+
+Install dependencies:
+Copynpm install
+
+Configure environment variables:
+Copycp .env.example .env
+Then edit .env file and add your CSVBox API key and template ID.
+Start the server:
+Copynpm start
+
+
+API Endpoints
+
+
+POST /update-data
+Updates the CSV file on CSVBox with new scraped data.
+Request:
+
+Content-Type: text/csv
+Body: Raw CSV data
+
+Example using curl:
+bashCopycurl -X POST http://localhost:3000/update-data \
+  -H "Content-Type: text/csv" \
+  --data-binary @sample-data.csv
+Response:
+jsonCopy{
+  "success": true,
+  "message": "Data uploaded to CSVBox successfully",
+  "url": "https://app.csvbox.io/public/abcd1234"
+}
+
+
+ALTERNATE METHOD 
+
+POST /update-data-file
+Alternative endpoint that accepts a file upload.
+Request:
+
+Content-Type: multipart/form-data
+Form field: csvFile (containing CSV file)
+
+Example using curl:
+bashCopycurl -X POST http://localhost:3000/update-data-file \
+  -F "csvFile=@sample-data.csv"
+Response: Same as /update-data
+GET /get-data
+Returns the current data from CSVBox as JSON.
+Response:
+jsonCopy{
+  "success": true,
+  "data": [
+    {
+      "symbol": "RELIANCE",
+      "open": "2500.50",
+      "high": "2550.75",
+      "low": "2498.25",
+      "close": "2540.30",
+      "volume": "1234567"
+    },
+    // Additional data rows...
+  ]
+}
+
+
+Error Handling
+The API includes proper error handling for:
+
+
+
+Invalid data formats
+File I/O errors
+CSVBox API errors
+Server errors
+
+Security Notes
+
+Store your CSVBox API key securely in environment variables
+Consider adding authentication to your API endpoints in production
